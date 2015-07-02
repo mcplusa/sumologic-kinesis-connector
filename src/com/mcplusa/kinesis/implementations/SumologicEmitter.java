@@ -40,22 +40,22 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
  */
 public class SumologicEmitter implements IEmitter<String> {
     private static final Log LOG = LogFactory.getLog(SumologicEmitter.class);
-    protected static final Log log4jClient = LogFactory.getLog(SumologicEmitter.class);
-    private KinesisConnectorConfiguration config;
 
     public SumologicEmitter(KinesisConnectorConfiguration configuration) {
-      this.config = configuration;
     }
 
     @Override
     public List<String> emit(final UnmodifiableBuffer<String> buffer)
         throws IOException {
-      
-      for (String item: buffer.getRecords()){
-        log4jClient.error(item);
-      }
-      // TODO Return items not sent
-      return null;
+
+        List<String> records = buffer.getRecords();
+        for (String record : records) {
+            System.out.println("Got record \n"+record);
+        }
+
+        // TODO Send them to Sumologic
+        
+        return new ArrayList<String>(); // TODO return unprocessed records
     }
 
     @Override
@@ -64,8 +64,18 @@ public class SumologicEmitter implements IEmitter<String> {
             LOG.error("Could not emit record: " + record);
         }
     }
-    
+
+    /**
+     * This helper method is used to dedupe a list of items. 
+     * @param items a list of items
+     * @return the subset of unique items
+     */
+    public Set<String> uniqueItems(List<String> items) {
+        return new HashSet<String>(items);
+    }
+
     @Override
     public void shutdown() {
+        //sumologicClient.shutdown();
     }
 }

@@ -4,33 +4,37 @@ import com.amazonaws.services.kinesis.connectors.KinesisConnectorRecordProcessor
 
 import com.mcplusa.kinesis.KinesisConnectorExecutor;
 import com.mcplusa.kinesis.KinesisMessageModel;
+import com.mcplusa.sumologic.SumologicMessageModelPipeline;
 
-public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageModel, String> {  
-  
-  private static String configFile = "SumologicConnector.properties";
-  
-  /**
-   * SumologicExecutor constructor.
-   * @param configFile Properties for the connector
-   */
-  public SumologicExecutor(String configFile) {
-    super(configFile);
-  }
-  
-  @Override
-  public KinesisConnectorRecordProcessorFactory<KinesisMessageModel, String> 
-      getKinesisConnectorRecordProcessorFactory() {
-        System.out.println("##KinesisConnectorRecordProcessorFactory");
-      return new KinesisConnectorRecordProcessorFactory<KinesisMessageModel, String>(
-              new SumologicMessageModelPipeline(), config);
-  }
-  
-  /**
-   * Main method for starting the KinesisExecutor.
-   */
-  public static void main(String[] args) {
-    KinesisConnectorExecutor<KinesisMessageModel, String> sumologicExecutor =
-            new SumologicExecutor(configFile);
-    sumologicExecutor.run();
-  }
+import java.util.Map;
+
+public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageModel, String> {
+
+    private static String configFile = "SumologicConnector.properties";
+
+    /**
+    * SumologicExecutor constructor.
+    * @param configFile Properties for the connector
+    */
+    public SumologicExecutor(String configFile) {
+        super(configFile);
+    }
+
+    @Override
+    public KinesisConnectorRecordProcessorFactory<KinesisMessageModel, String>
+            getKinesisConnectorRecordProcessorFactory() {
+        return new KinesisConnectorRecordProcessorFactory<KinesisMessageModel, String>
+                    (new SumologicMessageModelPipeline(),config);
+    }
+
+    /**
+     * Main method starts and runs the DynamoDBExecutor.
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        KinesisConnectorExecutor<KinesisMessageModel, String> sumologicExecutor =
+                new SumologicExecutor(configFile);
+        sumologicExecutor.run();
+    }
 }

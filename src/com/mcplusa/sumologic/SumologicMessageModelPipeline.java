@@ -1,7 +1,5 @@
 package com.mcplusa.sumologic;
 
-import java.util.Map;
-
 import com.mcplusa.kinesis.KinesisMessageModel;
 import com.mcplusa.sumologic.KinesisMessageModelSumologicTransformer;
 import com.mcplusa.kinesis.implementations.SumologicEmitter;
@@ -15,6 +13,8 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IBuffer;
 import com.amazonaws.services.kinesis.connectors.interfaces.ITransformer;
 import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
 
+import java.util.Map;
+
 
 /**
  * The Pipeline used by the Sumologic. Processes KinesisMessageModel records in JSON String
@@ -26,27 +26,28 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
  * <li>{@link AllPassFilter}</li>
  * </ul>
  */
-public class SumologicMessageModelPipeline implements 
-  IKinesisConnectorPipeline<KinesisMessageModel, String> {
+public class SumologicMessageModelPipeline implements
+        IKinesisConnectorPipeline<KinesisMessageModel, String> {
 
-  @Override
-  public IEmitter<String> getEmitter(KinesisConnectorConfiguration configuration) {
-      return new SumologicEmitter(configuration);
-  }
-  
-  @Override
-  public IBuffer<KinesisMessageModel> getBuffer(KinesisConnectorConfiguration configuration) {
-      return new BasicMemoryBuffer<KinesisMessageModel>(configuration);
-  }
+    @Override
+    public IEmitter<String> getEmitter(KinesisConnectorConfiguration configuration) {
+        return new SumologicEmitter(configuration);
+    }
 
-  @Override
-  public ITransformer<KinesisMessageModel, String>
-          getTransformer(KinesisConnectorConfiguration configuration) {
-      return new KinesisMessageModelSumologicTransformer();
-  }
+    @Override
+    public IBuffer<KinesisMessageModel> getBuffer(KinesisConnectorConfiguration configuration) {
+        return new BasicMemoryBuffer<KinesisMessageModel>(configuration);
+    }
 
-  @Override
-  public IFilter<KinesisMessageModel> getFilter(KinesisConnectorConfiguration configuration) {
-      return new AllPassFilter<KinesisMessageModel>();
-  }
+    @Override
+    public ITransformer<KinesisMessageModel, String>
+            getTransformer(KinesisConnectorConfiguration configuration) {
+        return new KinesisMessageModelSumologicTransformer();
+    }
+
+    @Override
+    public IFilter<KinesisMessageModel> getFilter(KinesisConnectorConfiguration configuration) {
+        return new AllPassFilter<KinesisMessageModel>();
+    }
+
 }

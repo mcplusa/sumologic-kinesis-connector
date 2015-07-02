@@ -14,8 +14,6 @@
  */
 package com.mcplusa.kinesis.implementations;
 
-import java.util.Map;
-
 import com.amazonaws.services.kinesis.connectors.interfaces.ITransformer;
 
 /**
