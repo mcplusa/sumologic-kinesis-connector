@@ -1,8 +1,8 @@
 package com.mcplusa.sumologic;
 
-import com.mcplusa.kinesis.KinesisMessageModel;
+import com.mcplusa.sumologic.KinesisMessageModel;
 import com.mcplusa.sumologic.KinesisMessageModelSumologicTransformer;
-import com.mcplusa.kinesis.implementations.SumologicEmitter;
+import com.mcplusa.sumologic.implementations.SumologicEmitter;
 
 import com.amazonaws.services.kinesis.connectors.interfaces.IKinesisConnectorPipeline;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;

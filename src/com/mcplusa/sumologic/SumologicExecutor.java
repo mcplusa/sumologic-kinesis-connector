@@ -3,7 +3,7 @@ package com.mcplusa.sumologic;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorRecordProcessorFactory;
 
 import com.mcplusa.kinesis.KinesisConnectorExecutor;
-import com.mcplusa.kinesis.KinesisMessageModel;
+import com.mcplusa.sumologic.KinesisMessageModel;
 import com.mcplusa.sumologic.SumologicMessageModelPipeline;
 
 public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageModel, String> {
