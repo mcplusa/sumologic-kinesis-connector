@@ -16,33 +16,16 @@ package com.mcplusa.kinesis;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mcplusa.sumologic.KinesisConnectorForSumologicConfiguration;
 import com.mcplusa.kinesis.KinesisConnectorExecutorBase;
-import com.mcplusa.kinesis.utils.CloudFormationUtils;
-import com.mcplusa.kinesis.utils.DynamoDBUtils;
-import com.mcplusa.kinesis.utils.EC2Utils;
-import com.mcplusa.kinesis.utils.KinesisUtils;
-import com.mcplusa.kinesis.utils.RedshiftUtils;
-import com.mcplusa.kinesis.utils.S3Utils;
-
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
-import com.amazonaws.regions.RegionUtils;
-import com.amazonaws.services.cloudformation.AmazonCloudFormation;
-import com.amazonaws.services.cloudformation.AmazonCloudFormationClient;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
-import com.amazonaws.services.redshift.AmazonRedshiftClient;
-import com.amazonaws.services.s3.AmazonS3Client;
 
 /**
  * This class defines the execution of a Amazon Kinesis Connector.
@@ -60,7 +43,7 @@ public abstract class KinesisConnectorExecutor<T, U> extends KinesisConnectorExe
     private static final String INPUT_STREAM_FILE = "inputStreamFile";
 
     // Class variables
-    protected final KinesisConnectorConfiguration config;
+    protected final KinesisConnectorForSumologicConfiguration config;
     private final Properties properties;
 
     /**
@@ -85,13 +68,13 @@ public abstract class KinesisConnectorExecutor<T, U> extends KinesisConnectorExe
             String msg = "Could not load properties file " + configFile + " from classpath";
             throw new IllegalStateException(msg, e);
         }
-        this.config = new KinesisConnectorConfiguration(properties, getAWSCredentialsProvider());
+        this.config = new KinesisConnectorForSumologicConfiguration(properties, getAWSCredentialsProvider());
 
         // Send sample data to AWS Kinesis if specified in the properties file
         setupInputStream();
 
         // Initialize executor with configurations
-        super.initialize(config);
+        super.initialize((KinesisConnectorConfiguration)config);
     }
 
     /**

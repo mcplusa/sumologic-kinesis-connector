@@ -6,6 +6,7 @@
     <property name="external.dir" location="${basedir}/external/" />
     <dirset dir="${external.dir}/" includes="aws-java-sdk*" id="aws-sdk"/>
     <pathconvert property="aws-sdk-dir" refid="aws-sdk" />
+    
     <path id="sumologic.classpath">
         <fileset dir="${aws-sdk-dir}/third-party" includes="**/*.jar" />
         <fileset dir="${aws-sdk-dir}/lib" includes="**/*.jar" />
@@ -20,7 +21,6 @@
         <delete includeEmptyDirs="true" failOnError="false">
             <fileset dir="." includes="**/*.class" />
             <fileset dir="${basedir}/build"/>
-            <fileset dir="${external.dir}"/>
             <fileset dir="${aws-sdk-dir}" />
         </delete>
     </target>
@@ -35,8 +35,15 @@
         <get src= "http://sdk-for-java.amazonwebservices.com/latest/aws-java-sdk.zip" dest="${src.dir}" usetimestamp="true" verbose="true" />
 	</target>
 
-	<!-- Import setup and unzip targets -->
-	<import file="${basedir}/shared-build.xml"/>
+	<target name="unzip">
+        <unzip src= "${src.dir}/aws-java-sdk.zip" dest="${src.dir}" />
+        <delete file= "${src.dir}/aws-java-sdk.zip" />
+    </target>
+
+    <target name="setup">
+        <antcall target="download"/>
+        <antcall target="unzip"/>
+    </target>
 
     <target name="run">
         <mkdir dir="${basedir}/build"/>

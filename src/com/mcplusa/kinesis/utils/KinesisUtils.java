@@ -47,7 +47,6 @@ public class KinesisUtils {
      *        The shard count to create the stream with
      */
     public static void createInputStream(KinesisConnectorConfiguration config) {
-        System.out.println("Create inputStream");
         AmazonKinesisClient kinesisClient = new AmazonKinesisClient(config.AWS_CREDENTIALS_PROVIDER);
         kinesisClient.setRegion(RegionUtils.getRegion(config.REGION_NAME));
         if (config.KINESIS_ENDPOINT != null) {

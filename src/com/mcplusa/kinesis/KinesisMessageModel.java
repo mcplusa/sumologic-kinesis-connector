@@ -26,6 +26,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class KinesisMessageModel implements Serializable {
 
+    /**
+   * 
+   */
     public int userid;
     public String username;
     public String firstname;

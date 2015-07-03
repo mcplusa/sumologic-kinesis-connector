@@ -21,7 +21,6 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibC
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorRecordProcessorFactory;
-import com.amazonaws.services.kinesis.connectors.interfaces.IKinesisConnectorPipeline;
 import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory;
 import com.amazonaws.services.kinesis.metrics.interfaces.IMetricsFactory;
 
@@ -49,9 +48,6 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
     protected void
             initialize(KinesisConnectorConfiguration kinesisConnectorConfiguration, IMetricsFactory metricFactory) {
       
-      System.out.println("Using user agent: "+kinesisConnectorConfiguration.APP_NAME + ","
-                                + kinesisConnectorConfiguration.CONNECTOR_DESTINATION + ","
-                                + KinesisConnectorConfiguration.KINESIS_CONNECTOR_USER_AGENT);
       KinesisClientLibConfiguration kinesisClientLibConfiguration =
                 new KinesisClientLibConfiguration(kinesisConnectorConfiguration.APP_NAME,
                         kinesisConnectorConfiguration.KINESIS_INPUT_STREAM,
@@ -68,11 +64,9 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
                         .withTaskBackoffTimeMillis(kinesisConnectorConfiguration.BACKOFF_INTERVAL)
                         .withMetricsBufferTimeMillis(kinesisConnectorConfiguration.CLOUDWATCH_BUFFER_TIME)
                         .withMetricsMaxQueueSize(kinesisConnectorConfiguration.CLOUDWATCH_MAX_QUEUE_SIZE)
-                        
                         .withUserAgent(kinesisConnectorConfiguration.APP_NAME + ","
                                 + kinesisConnectorConfiguration.CONNECTOR_DESTINATION + ","
                                 + KinesisConnectorConfiguration.KINESIS_CONNECTOR_USER_AGENT)
-                                
                         .withRegionName(kinesisConnectorConfiguration.REGION_NAME);
        
 

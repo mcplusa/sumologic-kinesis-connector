@@ -6,8 +6,6 @@ import com.mcplusa.kinesis.KinesisConnectorExecutor;
 import com.mcplusa.kinesis.KinesisMessageModel;
 import com.mcplusa.sumologic.SumologicMessageModelPipeline;
 
-import java.util.Map;
-
 public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageModel, String> {
 
     private static String configFile = "SumologicConnector.properties";
@@ -28,11 +26,11 @@ public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageMo
     }
 
     /**
-     * Main method starts and runs the DynamoDBExecutor.
+     * Main method starts and runs the SumologicExecutor.
      * 
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) {  
         KinesisConnectorExecutor<KinesisMessageModel, String> sumologicExecutor =
                 new SumologicExecutor(configFile);
         sumologicExecutor.run();

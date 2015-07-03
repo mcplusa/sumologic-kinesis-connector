@@ -1,10 +1,5 @@
 package com.mcplusa.sumologic;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
 import com.mcplusa.kinesis.KinesisMessageModel;
 import com.mcplusa.kinesis.implementations.SumologicTransformer;

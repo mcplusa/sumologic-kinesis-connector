@@ -13,8 +13,6 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IBuffer;
 import com.amazonaws.services.kinesis.connectors.interfaces.ITransformer;
 import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
 
-import java.util.Map;
-
 
 /**
  * The Pipeline used by the Sumologic. Processes KinesisMessageModel records in JSON String

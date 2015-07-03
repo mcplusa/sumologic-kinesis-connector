@@ -16,18 +16,16 @@ package com.mcplusa.kinesis.implementations;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.amazonaws.AmazonClientException;
+import com.mcplusa.sumologic.SumologicSender;
+import com.mcplusa.sumologic.KinesisConnectorForSumologicConfiguration;
+
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.connectors.UnmodifiableBuffer;
 import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
@@ -35,13 +33,17 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
 /**
  * This class is used to store records from a stream to Sumologic log files. It requires the use of a
  * SumologicTransformer, which is able to transform records into a format that can be sent to
- * Sumologic. Log4j is used to perform batch requests on the contents of a buffer when
- * emitting. This class requires the configuration of log4j using Sumologic's Log4j client.
+ * Sumologic.
  */
 public class SumologicEmitter implements IEmitter<String> {
     private static final Log LOG = LogFactory.getLog(SumologicEmitter.class);
 
+    private SumologicSender sender;
+    private KinesisConnectorForSumologicConfiguration config;
+
     public SumologicEmitter(KinesisConnectorConfiguration configuration) {
+        this.config = (KinesisConnectorForSumologicConfiguration) configuration;
+        sender = new SumologicSender(this.config.SUMOLOGIC_URL);
     }
 
     @Override
@@ -50,10 +52,9 @@ public class SumologicEmitter implements IEmitter<String> {
 
         List<String> records = buffer.getRecords();
         for (String record : records) {
-            System.out.println("Got record \n"+record);
+            LOG.info("Got record: "+record);
+            sender.sendToSumologic(record); // TODO send in batches
         }
-
-        // TODO Send them to Sumologic
         
         return new ArrayList<String>(); // TODO return unprocessed records
     }
@@ -76,6 +77,5 @@ public class SumologicEmitter implements IEmitter<String> {
 
     @Override
     public void shutdown() {
-        //sumologicClient.shutdown();
     }
 }
