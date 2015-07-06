@@ -28,8 +28,9 @@ import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
+import com.mcplusa.sumologic.KinesisMessageModel;
 
+import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
 
 /**
