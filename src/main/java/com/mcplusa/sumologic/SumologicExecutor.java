@@ -27,7 +27,6 @@ public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageMo
 
     /**
      * Main method starts and runs the SumologicExecutor.
-     * 
      * @param args
      */
     public static void main(String[] args) {  

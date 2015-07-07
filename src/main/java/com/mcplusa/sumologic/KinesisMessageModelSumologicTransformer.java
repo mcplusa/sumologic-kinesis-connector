@@ -15,7 +15,7 @@ public class KinesisMessageModelSumologicTransformer extends
         SumologicTransformer<KinesisMessageModel> {
 
     /**
-     * Creates a new KinesisMessageModelDynamoDBTransformer.
+     * Creates a new KinesisMessageModelSumologicTransformer.
      */
     public KinesisMessageModelSumologicTransformer() {
         super(KinesisMessageModel.class);
