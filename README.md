@@ -12,6 +12,7 @@ The **Kinesis-Sumologic Connector** is a Java connector that acts as a pipeline 
 ## Overview
 
 Incoming records from one (or many) Shards of an AWS Kinesis Stream will be read using the [Kinesis Client Library]. Records will be:
+
  + **Transformed**: Raw records will be transformed into a POJO using the KinesisMessageModel class and then serialized.
  + **Filtered**: A filter may be applied to the records. Default filter will let all records pass.
  + **Buffered**: A custom buffer may be used to define thresholds that, when crossed, will flush all records into the emitter.
@@ -28,12 +29,18 @@ To download the needed dependencies execute **ant setup**
 To build and execute the connector execute **ant run**
 
 
-
+## Related sources
 
 [Amazon Kinesis](http://aws.amazon.com/kinesis/)
+
 [Sumologic](https://www.sumologic.com/)
+
 [Java JDK 1.7](http://www.oracle.com/technetwork/java/javase/overview/index.html)
+
 [Ant](http://ant.apache.org/)
+
 [AWS Kinesis Account](http://aws.amazon.com/account/)
+
 [Sumologic Account](https://www.sumologic.com/pricing/)
+
 [Kinesis Client Library](https://github.com/awslabs/amazon-kinesis-client/)
