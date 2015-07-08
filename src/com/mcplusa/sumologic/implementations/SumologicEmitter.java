@@ -1,18 +1,4 @@
-/**
- * Copyright 2013-2014 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- * Licensed under the Amazon Software License (the "License").
- * You may not use this file except in compliance with the License.
- * A copy of the License is located at
- *
- * http://aws.amazon.com/asl/
- *
- * or in the "license" file accompanying this file. This file is distributed
- * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-package com.mcplusa.kinesis.implementations;
+package com.mcplusa.sumologic.implementations;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,12 +37,24 @@ public class SumologicEmitter implements IEmitter<String> {
         throws IOException {
 
         List<String> records = buffer.getRecords();
-        for (String record : records) {
-            LOG.info("Got record: "+record);
-            sender.sendToSumologic(record); // TODO send in batches
-        }
-        
-        return new ArrayList<String>(); // TODO return unprocessed records
+
+        return sendBatchConcatenating(records);
+    }
+    
+    public List<String> sendBatchConcatenating(List<String> records) {
+      String message = "";
+      for(String record: records) {
+        message += record;
+        message += "\n";
+      }
+      try {
+        LOG.info("Sending batch of: "+records.size()+" records");
+        sender.sendToSumologic(message);
+      } catch (IOException e) {
+        LOG.warn("Couldn't send record to Sumologic: "+e.getMessage());
+        return records;
+      }
+      return new ArrayList<String>();
     }
 
     @Override

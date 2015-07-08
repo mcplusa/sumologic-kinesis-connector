@@ -1,8 +1,9 @@
 package com.mcplusa.sumologic;
 
 import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
-import com.mcplusa.kinesis.KinesisMessageModel;
-import com.mcplusa.kinesis.implementations.SumologicTransformer;
+
+import com.mcplusa.sumologic.KinesisMessageModel;
+import com.mcplusa.sumologic.implementations.SumologicTransformer;
 
 
 /**
