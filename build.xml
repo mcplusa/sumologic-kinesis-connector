@@ -113,8 +113,4 @@
     <target name="run">
     	<antcall target="main"/>
     </target>
-
-    <target name="run">
-        <antcall target="main"/>
-    </target>
 </project>
