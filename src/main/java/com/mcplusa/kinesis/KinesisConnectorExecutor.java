@@ -128,34 +128,4 @@ public abstract class KinesisConnectorExecutor<T, U> extends KinesisConnectorExe
     private static boolean parseBoolean(String property, boolean defaultValue, Properties properties) {
         return Boolean.parseBoolean(properties.getProperty(property, Boolean.toString(defaultValue)));
     }
-
-    /**
-     * Helper method used to parse long properties.
-     * 
-     * @param property
-     *        The String key for the property
-     * @param defaultValue
-     *        The default value for the long property
-     * @param properties
-     *        The properties file to get property from
-     * @return property from property file, or if it is not specified, the default value
-     */
-    private static long parseLong(String property, long defaultValue, Properties properties) {
-        return Long.parseLong(properties.getProperty(property, Long.toString(defaultValue)));
-    }
-
-    /**
-     * Helper method used to parse integer properties.
-     * 
-     * @param property
-     *        The String key for the property
-     * @param defaultValue
-     *        The default value for the integer property
-     * @param properties
-     *        The properties file to get property from
-     * @return property from property file, or if it is not specified, the default value
-     */
-    private static int parseInt(String property, int defaultValue, Properties properties) {
-        return Integer.parseInt(properties.getProperty(property, Integer.toString(defaultValue)));
-    }
 }

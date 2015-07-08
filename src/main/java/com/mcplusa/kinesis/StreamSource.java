@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mcplusa.sumologic.KinesisMessageModel;
 import com.mcplusa.kinesis.utils.KinesisUtils;
 
 import com.amazonaws.auth.AWSCredentialsProvider;

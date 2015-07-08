@@ -36,7 +36,7 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
      * @param kinesisConnectorConfiguration Amazon Kinesis connector configuration
      */
     protected void initialize(KinesisConnectorConfiguration kinesisConnectorConfiguration) {
-        initialize(kinesisConnectorConfiguration, null);
+        initialize(kinesisConnectorConfiguration, new NullMetricsFactory());
     }
 
     /**
@@ -77,8 +77,6 @@ public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
         if (kinesisConnectorConfiguration.IDLE_TIME_BETWEEN_READS > kinesisConnectorConfiguration.BUFFER_MILLISECONDS_LIMIT) {
             LOG.warn("idleTimeBetweenReads is greater than bufferTimeMillisecondsLimit. For best results, ensure that bufferTimeMillisecondsLimit is more than or equal to idleTimeBetweenReads ");
         }
-
-        metricFactory = new NullMetricsFactory(); // TODO move higher in the hierarchy
      
         // If a metrics factory was specified, use it.
         if (metricFactory != null) {
