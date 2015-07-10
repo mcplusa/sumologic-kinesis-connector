@@ -23,6 +23,8 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
  */
 public class SumologicEmitter implements IEmitter<String> {
     private static final Log LOG = LogFactory.getLog(SumologicEmitter.class);
+    
+    private static final boolean CONCATENATE_BATCH = false;
 
     private SumologicSender sender;
     private KinesisConnectorForSumologicConfiguration config;
@@ -40,7 +42,10 @@ public class SumologicEmitter implements IEmitter<String> {
     public List<String> emit(final UnmodifiableBuffer<String> buffer)
         throws IOException {
         List<String> records = buffer.getRecords();
-        return sendBatchConcatenating(records);
+        if (CONCATENATE_BATCH)
+          return sendBatchConcatenating(records);
+        else
+          return sendRecordsOneByOne(records);
     }
     
     public List<String> sendBatchConcatenating(List<String> records) {
@@ -64,6 +69,21 @@ public class SumologicEmitter implements IEmitter<String> {
       else {
         return records;
       }
+    }
+    
+    public List<String> sendRecordsOneByOne (List<String> records) {
+      ArrayList<String> failedRecords = new ArrayList<String>();
+      for (String record: records) {
+        try {
+          if (!sender.sendToSumologic(record)) {
+            failedRecords.add(record);
+          }
+        } catch (IOException e) {
+          LOG.warn("Couldn't send record: "+record);
+        }
+      }
+      LOG.info("Sent records: "+(records.size()-failedRecords.size())+" failed: "+failedRecords.size());
+      return failedRecords;
     }
 
     @Override
