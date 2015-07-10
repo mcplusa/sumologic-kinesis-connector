@@ -31,11 +31,11 @@ public class SumologicEmitter implements IEmitter<String> {
 
     public SumologicEmitter(KinesisConnectorConfiguration configuration) {
         this.config = (KinesisConnectorForSumologicConfiguration) configuration;
-        sender = new SumologicSender(this.config.SUMOLOGIC_URL);
+        sender = new SumologicSender(config.SUMOLOGIC_URL, config.SUMOLOGIC_USE_LOG4J);
     }
     
-    public SumologicEmitter(String url) {
-        sender = new SumologicSender(url);
+    public SumologicEmitter(String url, boolean useLog4j) {
+        sender = new SumologicSender(url, useLog4j);
     }
 
     @Override

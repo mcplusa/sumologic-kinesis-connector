@@ -14,7 +14,11 @@ import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 public class KinesisConnectorForSumologicConfiguration extends KinesisConnectorConfiguration {
     // Properties added for Sumologic
     public static final String PROP_SUMOLOGIC_URL = "sumologicUrl";
+    public static final String PROP_SUMOLOGIC_USE_LOG4J = "useLog4j";
     public final String SUMOLOGIC_URL;
+    public final boolean SUMOLOGIC_USE_LOG4J;
+    
+    public final boolean DEFAULT_SUMOLOGIC_USE_LOG4J = false;
 
     /**
      * Configure the connector application with any set of properties that are unique to the application. Any
@@ -22,7 +26,13 @@ public class KinesisConnectorForSumologicConfiguration extends KinesisConnectorC
      */
     public KinesisConnectorForSumologicConfiguration(Properties properties, AWSCredentialsProvider credentialsProvider) {
         super(properties, credentialsProvider);
-        
         SUMOLOGIC_URL = properties.getProperty(PROP_SUMOLOGIC_URL, null);
+        SUMOLOGIC_USE_LOG4J = getBooleanProperty(PROP_SUMOLOGIC_USE_LOG4J, 
+            DEFAULT_SUMOLOGIC_USE_LOG4J, properties);
     }
+    
+    private boolean getBooleanProperty(String property, boolean defaultValue, Properties properties) {
+      String propertyValue = properties.getProperty(property, Boolean.toString(defaultValue));
+      return Boolean.parseBoolean(propertyValue);
+  }
 }
