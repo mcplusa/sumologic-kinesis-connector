@@ -39,7 +39,7 @@ public class SumologicEmitterTest {
     messages.add("This is message #3");
     messages.add("This is message #4");
     
-    SumologicEmitter emitter = new SumologicEmitter(url);
+    SumologicEmitter emitter = new SumologicEmitter(url, false);
     List <String> notEmittedMessages = emitter.sendBatchConcatenating(messages);
     
     Assert.assertEquals(messages, notEmittedMessages);
@@ -55,7 +55,7 @@ public class SumologicEmitterTest {
     messages.add("This is message #3");
     messages.add("This is message #4");
     
-    SumologicEmitter emitter = new SumologicEmitter(url);
+    SumologicEmitter emitter = new SumologicEmitter(url, false);
     List <String> notEmittedMessages = emitter.sendBatchConcatenating(messages);
     
     Assert.assertEquals(0, notEmittedMessages.size());
