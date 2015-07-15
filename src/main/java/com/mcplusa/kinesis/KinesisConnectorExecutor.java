@@ -38,9 +38,11 @@ public abstract class KinesisConnectorExecutor<T, U> extends KinesisConnectorExe
     // Create Stream Source constants
     private static final String CREATE_STREAM_SOURCE = "createStreamSource";
     private static final String LOOP_OVER_STREAM_SOURCE = "loopOverStreamSource";
+    private static final String INPUT_STREAM_FILE = "inputStreamFile";
+    
     private static final boolean DEFAULT_CREATE_STREAM_SOURCE = false;
     private static final boolean DEFAULT_LOOP_OVER_STREAM_SOURCE = false;
-    private static final String INPUT_STREAM_FILE = "inputStreamFile";
+
 
     // Class variables
     protected final KinesisConnectorForSumologicConfiguration config;

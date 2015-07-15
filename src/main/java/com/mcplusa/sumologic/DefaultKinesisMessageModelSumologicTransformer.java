@@ -1,0 +1,52 @@
+package com.mcplusa.sumologic;
+
+import java.io.IOException;
+
+import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
+import com.amazonaws.services.kinesis.model.Record;
+import com.mcplusa.sumologic.KinesisMessageModel;
+import com.mcplusa.sumologic.implementations.SumologicEmitter;
+import com.mcplusa.sumologic.implementations.SumologicTransformer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.zip.GZIPInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+import org.apache.commons.codec.binary.Base64;
+
+
+/**
+ * A custom transfomer for {@link KinesisMessageModel} records in JSON format. The output is in a format
+ * usable for insertions to Sumologic.
+ */
+public class DefaultKinesisMessageModelSumologicTransformer implements
+        SumologicTransformer<KinesisMessageModel> {
+
+  private static final Log LOG = LogFactory.getLog(DefaultKinesisMessageModelSumologicTransformer.class);
+  
+    /**
+     * Creates a new KinesisMessageModelSumologicTransformer.
+     */
+    public DefaultKinesisMessageModelSumologicTransformer() {
+        super();
+    }
+
+    @Override
+    public String fromClass(KinesisMessageModel message) {
+        return message.toString();
+    }
+
+    @Override
+    public KinesisMessageModel toClass(Record record) throws IOException {
+      byte[] decodedRecord = record.getData().array();
+      String stringifiedRecord = new String(decodedRecord);
+
+      return new KinesisMessageModel(stringifiedRecord);
+    }
+}

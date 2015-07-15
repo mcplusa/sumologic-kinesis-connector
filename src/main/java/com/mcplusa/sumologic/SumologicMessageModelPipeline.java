@@ -1,9 +1,11 @@
 package com.mcplusa.sumologic;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.mcplusa.sumologic.KinesisMessageModel;
 import com.mcplusa.sumologic.KinesisMessageModelSumologicTransformer;
 import com.mcplusa.sumologic.implementations.SumologicEmitter;
-
 import com.amazonaws.services.kinesis.connectors.interfaces.IKinesisConnectorPipeline;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.connectors.impl.BasicMemoryBuffer;
@@ -27,6 +29,8 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
 public class SumologicMessageModelPipeline implements
         IKinesisConnectorPipeline<KinesisMessageModel, String> {
 
+  private static final Log LOG = LogFactory.getLog(SumologicMessageModelPipeline.class);
+  
     @Override
     public IEmitter<String> getEmitter(KinesisConnectorConfiguration configuration) {
         return new SumologicEmitter(configuration);
@@ -40,7 +44,26 @@ public class SumologicMessageModelPipeline implements
     @Override
     public ITransformer<KinesisMessageModel, String>
             getTransformer(KinesisConnectorConfiguration configuration) {
-        return new KinesisMessageModelSumologicTransformer();
+      
+      // Load specified class
+      String argClass = ((KinesisConnectorForSumologicConfiguration)configuration).TRANSFORMER_CLASS;
+      String className = "com.mcplusa.sumologic."+argClass;
+      ClassLoader classLoader = SumologicMessageModelPipeline.class.getClassLoader();
+      Class ModelClass = null;
+      try {
+        ModelClass = classLoader.loadClass(className);
+        ITransformer<KinesisMessageModel, String> ITransformerObject = (ITransformer<KinesisMessageModel, String>)ModelClass.newInstance();
+        LOG.info("Using transformer: "+ITransformerObject.getClass().getName());
+        return ITransformerObject;
+      } catch (ClassNotFoundException e) {
+        LOG.error("Class not found: "+className+" error: "+e.getMessage());
+      } catch (InstantiationException e) {
+        LOG.error("Class not found: "+className+" error: "+e.getMessage());
+      } catch (IllegalAccessException e) {
+        LOG.error("Class not found: "+className+" error: "+e.getMessage());
+      }
+      
+      return new DefaultKinesisMessageModelSumologicTransformer();
     }
 
     @Override
