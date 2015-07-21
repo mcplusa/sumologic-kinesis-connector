@@ -1,9 +1,11 @@
 package com.mcplusa.sumologic;
 
-import com.mcplusa.sumologic.KinesisMessageModel;
-import com.mcplusa.sumologic.KinesisMessageModelSumologicTransformer;
-import com.mcplusa.sumologic.implementations.SumologicEmitter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import com.mcplusa.sumologic.SimpleKinesisMessageModel;
+import com.mcplusa.sumologic.CloudWatchMessageModelSumologicTransformer;
+import com.mcplusa.sumologic.implementations.SumologicEmitter;
 import com.amazonaws.services.kinesis.connectors.interfaces.IKinesisConnectorPipeline;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.connectors.impl.BasicMemoryBuffer;
@@ -20,32 +22,53 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IFilter;
  * <ul>
  * <li>{@link SumologicEmitter}</li>
  * <li>{@link BasicMemoryBuffer}</li>
- * <li>{@link KinesisMessageModelSumologicTransformer}</li>
+ * <li>{@link CloudWatchMessageModelSumologicTransformer}</li>
  * <li>{@link AllPassFilter}</li>
  * </ul>
  */
 public class SumologicMessageModelPipeline implements
-        IKinesisConnectorPipeline<KinesisMessageModel, String> {
+        IKinesisConnectorPipeline<SimpleKinesisMessageModel, String> {
 
+  private static final Log LOG = LogFactory.getLog(SumologicMessageModelPipeline.class);
+  
     @Override
     public IEmitter<String> getEmitter(KinesisConnectorConfiguration configuration) {
         return new SumologicEmitter(configuration);
     }
 
     @Override
-    public IBuffer<KinesisMessageModel> getBuffer(KinesisConnectorConfiguration configuration) {
-        return new BasicMemoryBuffer<KinesisMessageModel>(configuration);
+    public IBuffer<SimpleKinesisMessageModel> getBuffer(KinesisConnectorConfiguration configuration) {
+        return new BasicMemoryBuffer<SimpleKinesisMessageModel>(configuration);
     }
 
     @Override
-    public ITransformer<KinesisMessageModel, String>
+    public ITransformer<SimpleKinesisMessageModel, String>
             getTransformer(KinesisConnectorConfiguration configuration) {
-        return new KinesisMessageModelSumologicTransformer();
+      
+      // Load specified class
+      String argClass = ((KinesisConnectorForSumologicConfiguration)configuration).TRANSFORMER_CLASS;
+      String className = "com.mcplusa.sumologic."+argClass;
+      ClassLoader classLoader = SumologicMessageModelPipeline.class.getClassLoader();
+      Class ModelClass = null;
+      try {
+        ModelClass = classLoader.loadClass(className);
+        ITransformer<SimpleKinesisMessageModel, String> ITransformerObject = (ITransformer<SimpleKinesisMessageModel, String>)ModelClass.newInstance();
+        LOG.info("Using transformer: "+ITransformerObject.getClass().getName());
+        return ITransformerObject;
+      } catch (ClassNotFoundException e) {
+        LOG.error("Class not found: "+className+" error: "+e.getMessage());
+      } catch (InstantiationException e) {
+        LOG.error("Class not found: "+className+" error: "+e.getMessage());
+      } catch (IllegalAccessException e) {
+        LOG.error("Class not found: "+className+" error: "+e.getMessage());
+      }
+      
+      return new DefaultKinesisMessageModelSumologicTransformer();
     }
 
     @Override
-    public IFilter<KinesisMessageModel> getFilter(KinesisConnectorConfiguration configuration) {
-        return new AllPassFilter<KinesisMessageModel>();
+    public IFilter<SimpleKinesisMessageModel> getFilter(KinesisConnectorConfiguration configuration) {
+        return new AllPassFilter<SimpleKinesisMessageModel>();
     }
 
 }

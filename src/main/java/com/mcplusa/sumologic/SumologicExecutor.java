@@ -3,10 +3,10 @@ package com.mcplusa.sumologic;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorRecordProcessorFactory;
 
 import com.mcplusa.kinesis.KinesisConnectorExecutor;
-import com.mcplusa.sumologic.KinesisMessageModel;
+import com.mcplusa.sumologic.SimpleKinesisMessageModel;
 import com.mcplusa.sumologic.SumologicMessageModelPipeline;
 
-public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageModel, String> {
+public class SumologicExecutor extends KinesisConnectorExecutor<SimpleKinesisMessageModel, String> {
 
     private static String configFile = "SumologicConnector.properties";
 
@@ -19,9 +19,9 @@ public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageMo
     }
 
     @Override
-    public KinesisConnectorRecordProcessorFactory<KinesisMessageModel, String>
+    public KinesisConnectorRecordProcessorFactory<SimpleKinesisMessageModel, String>
             getKinesisConnectorRecordProcessorFactory() {
-        return new KinesisConnectorRecordProcessorFactory<KinesisMessageModel, String>
+        return new KinesisConnectorRecordProcessorFactory<SimpleKinesisMessageModel, String>
                     (new SumologicMessageModelPipeline(),config);
     }
 
@@ -30,7 +30,7 @@ public class SumologicExecutor extends KinesisConnectorExecutor<KinesisMessageMo
      * @param args
      */
     public static void main(String[] args) {  
-        KinesisConnectorExecutor<KinesisMessageModel, String> sumologicExecutor =
+        KinesisConnectorExecutor<SimpleKinesisMessageModel, String> sumologicExecutor =
                 new SumologicExecutor(configFile);
         sumologicExecutor.run();
     }

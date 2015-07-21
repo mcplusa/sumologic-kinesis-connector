@@ -2,11 +2,11 @@ package com.mcplusa.sumologic;
 
 import java.io.Serializable;
 
-public class KinesisMessageModel implements Serializable {
+public class SimpleKinesisMessageModel implements Serializable {
   private String data;
   private int id;
   
-  public KinesisMessageModel(String data) {
+  public SimpleKinesisMessageModel(String data) {
     this.data = data;
     this.id = 1;
   }

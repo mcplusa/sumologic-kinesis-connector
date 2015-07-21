@@ -15,13 +15,10 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
 
 public class SumologicSender {
   private static final Log LOG = LogFactory.getLog(SumologicSender.class);
- 
+
   private String url = null;  
   private HttpClient httpClient = null;
 
@@ -30,33 +27,23 @@ public class SumologicSender {
   private static final int RETRIES = 3;
   private static final int SLEEP_TIME = 1000;
   
-  private boolean useLog4j = false;
-  
-	public SumologicSender(String url, boolean useLog4j) {
+	    
+	public SumologicSender(String url) {
 		  this.url = url;
-		  this.useLog4j = useLog4j;
 		  
-		  if (!useLog4j) {
-    	    HttpParams params = new BasicHttpParams();
-    	    HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
-    	    HttpConnectionParams.setSoTimeout(params, socketTimeout);
-    	    httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(), params);
-		  }
+	    HttpParams params = new BasicHttpParams();
+	    HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
+	    HttpConnectionParams.setSoTimeout(params, socketTimeout);
+	    httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(), params);
 	}
-	
-	public boolean sendToSumologicUsingLog4j(String data) {
-	  Logger sumologicLog = Logger.getLogger("sumologic");
-    sumologicLog.trace(data);
-	  return true;
-	}
-	
-	public boolean sendToSumologicUsingHTTPRequest(String data) throws IOException {
+
+	public boolean sendToSumologic(String data) throws IOException{
 	  int retries = RETRIES;
-    int sleep_time = SLEEP_TIME;
-    int statusCode;
-    
-    do {
-      HttpPost post = null;
+	  int sleep_time = SLEEP_TIME;
+	  int statusCode;
+	  
+	  do {
+  	  HttpPost post = null;
       post = new HttpPost(url);
       post.setEntity(new StringEntity(data, HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8));
       HttpResponse response = httpClient.execute(post);
@@ -74,7 +61,7 @@ public class SumologicSender {
           Thread.sleep(sleep_time);
         } catch (InterruptedException ignore) {}
       }
-    } while (statusCode == 429 && retries > 0);
+	  } while (statusCode == 429 && retries > 0);
     
     // Check if the request was successful;
     if (statusCode != 200) {
@@ -84,14 +71,5 @@ public class SumologicSender {
     else{ 
       return true;
     } 
-	}
-
-	public boolean sendToSumologic(String data) throws IOException{
-	  if (this.useLog4j) {
-	    return sendToSumologicUsingLog4j(data);
-	  }
-	  else {
-	    return sendToSumologicUsingHTTPRequest(data);
-	  }
 	}
 }

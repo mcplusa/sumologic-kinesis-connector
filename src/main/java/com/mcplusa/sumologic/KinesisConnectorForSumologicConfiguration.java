@@ -5,7 +5,6 @@ import java.util.Properties;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 
-
 /**
  * This class contains constants used to configure AWS Services in Amazon Kinesis Connectors. The user
  * should use System properties to set their proper configuration. An instance of
@@ -14,11 +13,13 @@ import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 public class KinesisConnectorForSumologicConfiguration extends KinesisConnectorConfiguration {
     // Properties added for Sumologic
     public static final String PROP_SUMOLOGIC_URL = "sumologicUrl";
-    public static final String PROP_SUMOLOGIC_USE_LOG4J = "useLog4j";
-    public final String SUMOLOGIC_URL;
-    public final boolean SUMOLOGIC_USE_LOG4J;
+    public static final String PROP_TRANSFORMER_CLASS = "transformerClass";
     
-    public final boolean DEFAULT_SUMOLOGIC_USE_LOG4J = false;
+    private static final String DEFAULT_SUMOLOGIC_URL = null;
+    private static final String DEFAULT_TRANSFORMER_CLASS = null;
+
+    public final String SUMOLOGIC_URL;
+    public final String TRANSFORMER_CLASS;
 
     /**
      * Configure the connector application with any set of properties that are unique to the application. Any
@@ -26,13 +27,8 @@ public class KinesisConnectorForSumologicConfiguration extends KinesisConnectorC
      */
     public KinesisConnectorForSumologicConfiguration(Properties properties, AWSCredentialsProvider credentialsProvider) {
         super(properties, credentialsProvider);
-        SUMOLOGIC_URL = properties.getProperty(PROP_SUMOLOGIC_URL, null);
-        SUMOLOGIC_USE_LOG4J = getBooleanProperty(PROP_SUMOLOGIC_USE_LOG4J, 
-            DEFAULT_SUMOLOGIC_USE_LOG4J, properties);
+        
+        SUMOLOGIC_URL = properties.getProperty(PROP_SUMOLOGIC_URL, DEFAULT_SUMOLOGIC_URL);
+        TRANSFORMER_CLASS = properties.getProperty(PROP_TRANSFORMER_CLASS, DEFAULT_TRANSFORMER_CLASS);
     }
-    
-    private boolean getBooleanProperty(String property, boolean defaultValue, Properties properties) {
-      String propertyValue = properties.getProperty(property, Boolean.toString(defaultValue));
-      return Boolean.parseBoolean(propertyValue);
-  }
 }

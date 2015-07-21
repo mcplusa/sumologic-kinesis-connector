@@ -23,29 +23,29 @@ import com.amazonaws.services.kinesis.connectors.interfaces.IEmitter;
  */
 public class SumologicEmitter implements IEmitter<String> {
     private static final Log LOG = LogFactory.getLog(SumologicEmitter.class);
-    
-    private static final boolean CONCATENATE_BATCH = false;
 
     private SumologicSender sender;
     private KinesisConnectorForSumologicConfiguration config;
+    private static final boolean SEND_RECORDS_IN_BATCHES = true;
 
     public SumologicEmitter(KinesisConnectorConfiguration configuration) {
         this.config = (KinesisConnectorForSumologicConfiguration) configuration;
-        sender = new SumologicSender(config.SUMOLOGIC_URL, config.SUMOLOGIC_USE_LOG4J);
+        sender = new SumologicSender(this.config.SUMOLOGIC_URL);
     }
     
-    public SumologicEmitter(String url, boolean useLog4j) {
-        sender = new SumologicSender(url, useLog4j);
+    public SumologicEmitter(String url) {
+        sender = new SumologicSender(url);
     }
 
     @Override
     public List<String> emit(final UnmodifiableBuffer<String> buffer)
         throws IOException {
         List<String> records = buffer.getRecords();
-        if (CONCATENATE_BATCH)
+        if (SEND_RECORDS_IN_BATCHES) {
           return sendBatchConcatenating(records);
-        else
+        } else {
           return sendRecordsOneByOne(records);
+        }
     }
     
     public List<String> sendBatchConcatenating(List<String> records) {

@@ -28,7 +28,7 @@ import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mcplusa.sumologic.KinesisMessageModel;
+import com.mcplusa.sumologic.SimpleKinesisMessageModel;
 
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
@@ -41,7 +41,7 @@ public class BatchedStreamSource extends StreamSource {
     private static Log LOG = LogFactory.getLog(BatchedStreamSource.class);
 
     private static int NUM_BYTES_PER_PUT_REQUEST = 50000;
-    List<KinesisMessageModel> buffer;
+    List<SimpleKinesisMessageModel> buffer;
 
     public BatchedStreamSource(KinesisConnectorConfiguration config, String inputFile) {
         this(config, inputFile, false);
@@ -49,7 +49,7 @@ public class BatchedStreamSource extends StreamSource {
 
     public BatchedStreamSource(KinesisConnectorConfiguration config, String inputFile, boolean loopOverStreamSource) {
         super(config, inputFile, loopOverStreamSource);
-        buffer = new ArrayList<KinesisMessageModel>();
+        buffer = new ArrayList<SimpleKinesisMessageModel>();
     }
 
     @Override
@@ -59,14 +59,14 @@ public class BatchedStreamSource extends StreamSource {
             int lines = 0;
 
             while ((line = br.readLine()) != null) {
-                KinesisMessageModel kinesisMessageModel = objectMapper.readValue(line, KinesisMessageModel.class);
+                SimpleKinesisMessageModel kinesisMessageModel = objectMapper.readValue(line, SimpleKinesisMessageModel.class);
                 buffer.add(kinesisMessageModel);
                 if (numBytesInBuffer() > NUM_BYTES_PER_PUT_REQUEST) {
                     /*
                      * We need to remove the last record to ensure this data blob is accepted by the Amazon Kinesis
                      * client which restricts the data blob to be less than 50 KB.
                      */
-                    KinesisMessageModel lastRecord = buffer.remove(buffer.size() - 1);
+                    SimpleKinesisMessageModel lastRecord = buffer.remove(buffer.size() - 1);
                     flushBuffer();
                     /*
                      * We add it back so it will be part of the next batch.
