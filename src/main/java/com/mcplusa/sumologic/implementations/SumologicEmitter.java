@@ -26,6 +26,7 @@ public class SumologicEmitter implements IEmitter<String> {
 
     private SumologicSender sender;
     private KinesisConnectorForSumologicConfiguration config;
+    private static final boolean SEND_RECORDS_IN_BATCHES = true;
 
     public SumologicEmitter(KinesisConnectorConfiguration configuration) {
         this.config = (KinesisConnectorForSumologicConfiguration) configuration;
@@ -40,7 +41,11 @@ public class SumologicEmitter implements IEmitter<String> {
     public List<String> emit(final UnmodifiableBuffer<String> buffer)
         throws IOException {
         List<String> records = buffer.getRecords();
-        return sendBatchConcatenating(records);
+        if (SEND_RECORDS_IN_BATCHES) {
+          return sendBatchConcatenating(records);
+        } else {
+          return sendRecordsOneByOne(records);
+        }
     }
     
     public List<String> sendBatchConcatenating(List<String> records) {
@@ -64,6 +69,21 @@ public class SumologicEmitter implements IEmitter<String> {
       else {
         return records;
       }
+    }
+    
+    public List<String> sendRecordsOneByOne (List<String> records) {
+      ArrayList<String> failedRecords = new ArrayList<String>();
+      for (String record: records) {
+        try {
+          if (!sender.sendToSumologic(record)) {
+            failedRecords.add(record);
+          }
+        } catch (IOException e) {
+          LOG.warn("Couldn't send record: "+record);
+        }
+      }
+      LOG.info("Sent records: "+(records.size()-failedRecords.size())+" failed: "+failedRecords.size());
+      return failedRecords;
     }
 
     @Override

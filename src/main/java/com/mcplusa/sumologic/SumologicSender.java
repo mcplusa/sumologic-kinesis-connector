@@ -43,7 +43,7 @@ public class SumologicSender {
 	  int statusCode;
 	  
 	  do {
-    	  HttpPost post = null;
+  	  HttpPost post = null;
       post = new HttpPost(url);
       post.setEntity(new StringEntity(data, HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8));
       HttpResponse response = httpClient.execute(post);
