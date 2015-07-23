@@ -4,23 +4,23 @@ The **Kinesis-Sumologic Connector** is a Java connector that acts as a pipeline 
 
 ## Requirements
 
- + [Java JDK 1.7]: This connector has been built with Java version 1.7.
- + [Ant]: A build.xml script has been provided to build the connector with Ant.
- + [AWS Kinesis Account]: An Amazon AWS Kinesis account to use as a source of data.
- + [Sumologic Account]: A Sumologic account to use as a destination.
+ + **Java JDK 1.7**: This connector has been built with Java version 1.7.
+ + **Ant**: A build.xml script has been provided to build the connector with Ant.
+ + **AWS Kinesis Account**: An Amazon AWS Kinesis account to use as a source of data.
+ + **Sumologic Account**: A Sumologic account to use as a destination.
 
 ## Overview
 
 Incoming records from one (or many) Shards of an AWS Kinesis Stream will be read using the [Kinesis Client Library]. Records will be:
 
- + **Transformed**: Raw records will be transformed into a POJO using the KinesisMessageModel class and then serialized.
+ + **Transformed**: Raw records will be transformed into a POJO using a Kinesis Model class and then serialized. The transformer used will be specified in the properties file.
  + **Filtered**: A filter may be applied to the records. Default filter will let all records pass.
  + **Buffered**: A custom buffer may be used to define thresholds that, when crossed, will flush all records into the emitter.
  + **Emitted**: The records will get send to the Sumologic Collector.
 
 ## Configuration
 
-A sample properties file is provided, which should be modified to use your AWS Accounts (**accessKey** and **secretKey**), Kinesis Stream(**kinesisInputStream**), Sumologic HTTP source (**sumologicUrl**) and App Name (**appName**).
+A sample properties file is provided, which should be modified to use your AWS Accounts (**accessKey** and **secretKey**), Kinesis Stream(**kinesisInputStream**), Sumologic HTTP source (**sumologicUrl**), App Name (**appName**) and Transformer class used (**transformerClass**).
 
 ## Running the Connector
 
