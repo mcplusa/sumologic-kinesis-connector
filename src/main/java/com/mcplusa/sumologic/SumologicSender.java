@@ -1,59 +1,68 @@
 package com.mcplusa.sumologic;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
+import com.ning.http.client.AsyncHttpClientConfig.Builder;
+import com.ning.http.client.Response;
 
 public class SumologicSender {
   private static final Log LOG = LogFactory.getLog(SumologicSender.class);
 
   private String url = null;  
-  private HttpClient httpClient = null;
+  private AsyncHttpClient client = null;
 
-  private int connectionTimeout = 1000;
-  private int socketTimeout = 60000;
   private static final int RETRIES = 3;
   private static final int SLEEP_TIME = 1000;
-  
 	    
 	public SumologicSender(String url) {
 		  this.url = url;
-		  
-	    HttpParams params = new BasicHttpParams();
-	    HttpConnectionParams.setConnectionTimeout(params, connectionTimeout);
-	    HttpConnectionParams.setSoTimeout(params, socketTimeout);
-	    httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(), params);
+
+	    Builder builder = new AsyncHttpClientConfig.Builder();
+	    this.client = new AsyncHttpClient(builder.build());
 	}
+	
+  private BoundRequestBuilder clientPreparePost(String url){
+    if (this.client.isClosed()){
+      Builder builder = new AsyncHttpClientConfig.Builder();
+      this.client = new AsyncHttpClient(builder.build()); 
+    }
+    return this.client.preparePost(url);
+  }
 
 	public boolean sendToSumologic(String data) throws IOException{
 	  int retries = RETRIES;
 	  int sleep_time = SLEEP_TIME;
-	  int statusCode;
+	  int statusCode = -1;
 	  
 	  do {
-  	  HttpPost post = null;
-      post = new HttpPost(url);
-      post.setEntity(new StringEntity(data, HTTP.PLAIN_TEXT_TYPE, HTTP.UTF_8));
-      HttpResponse response = httpClient.execute(post);
-      statusCode = response.getStatusLine().getStatusCode();
+	    BoundRequestBuilder builder = null;
+	    builder = this.clientPreparePost(url);
+	    
+	    byte[] compressedData = compressGzip(data);
+	    
+	    builder.setHeader("Content-Encoding", "gzip");
+	    builder.setBody(compressedData);
+	    
+	    Response response = null;
+      try {
+        response = builder.execute().get();
+        statusCode = response.getStatusCode();
+      } catch (InterruptedException e) {
+        LOG.error("Can't send POST to Sumologic "+e.getMessage());
+      } catch (ExecutionException e) {
+        LOG.error("Can't send POST to Sumologic "+e.getMessage());
+      }
       
-      //need to consume the body if you want to re-use the connection.
-      EntityUtils.consume(response.getEntity());
-      try { 
-        post.abort(); 
-      } catch (Exception ignore) {}
       if (statusCode == 429) {
         LOG.warn("Got TOO MANY REQUESTS from Sumologic");
         retries--;
@@ -71,5 +80,30 @@ public class SumologicSender {
     else{ 
       return true;
     } 
+	}
+	
+	public byte[] compressGzip(String data) {
+	  if (data == null || data.length() == 0) {
+      return null;
+	  }
+	  
+	  ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+	  GZIPOutputStream gzip;
+	  try {
+      gzip = new GZIPOutputStream(outputStream);
+    } catch (IOException e) {
+      LOG.error("Cannot compress into GZIP "+e.getMessage());
+      return null;
+    }
+	  
+    // Put data into the GZIP buffer
+	  try {
+      gzip.write(data.getBytes("UTF-8"));
+      gzip.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+	
+	  return outputStream.toByteArray();
 	}
 }

@@ -2,10 +2,8 @@ package com.mcplusa.sumologic;
 
 import java.io.IOException;
 
-import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
 import com.amazonaws.services.kinesis.model.Record;
 import com.mcplusa.sumologic.SimpleKinesisMessageModel;
-import com.mcplusa.sumologic.implementations.SumologicEmitter;
 import com.mcplusa.sumologic.implementations.SumologicTransformer;
 
 import org.apache.commons.logging.Log;
@@ -15,11 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
-import org.apache.commons.codec.binary.Base64;
-
 
 /**
  * A custom transfomer for {@link SimpleKinesisMessageModel} records in JSON format. The output is in a format

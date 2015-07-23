@@ -1,7 +1,9 @@
 package com.mcplusa.sumologic;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -14,6 +16,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.mcplusa.sumologic.CloudWatchMessageModelSumologicTransformer;
+import com.mcplusa.sumologic.SumologicSender;
 import com.mcplusa.sumologic.implementations.SumologicEmitter;
 
 public class SumologicSenderTest {
@@ -62,6 +66,20 @@ public class SumologicSenderTest {
     } catch (IOException e) {
       Assert.fail("Got an exception during test: "+e.getMessage());
     }
+  }
+  
+  @Test
+  public void decompressGzipTest() {
+    String url = MOCKED_HOST + MOCKED_COLLECTION;
+    
+    String data = "a string of characters";
+    
+    SumologicSender sender = new SumologicSender(url);
+
+    byte[] compressData = sender.compressGzip(data);
+    String result = CloudWatchMessageModelSumologicTransformer.decompressGzip(compressData);
+    
+    Assert.assertTrue(data.equals(result));
   }
   
   private void mockEmitMessages () {
