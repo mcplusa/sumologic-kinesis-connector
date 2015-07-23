@@ -12,6 +12,9 @@ import org.apache.commons.logging.LogFactory;
 import java.io.ByteArrayInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -39,6 +42,12 @@ public class CloudWatchMessageModelSumologicTransformer implements
     public SimpleKinesisMessageModel toClass(Record record) throws IOException {
       byte[] decodedRecord = record.getData().array();
       String stringifiedRecord = decompressGzip(decodedRecord);
+      
+      if (stringifiedRecord == null) {
+        LOG.error("Unable to decompress the record: "+new String(record.getData().array()));
+        LOG.error("Not attempting to transform into a Message Model");
+        return null;
+      }
 
       return new SimpleKinesisMessageModel(stringifiedRecord);
     }
@@ -58,6 +67,20 @@ public class CloudWatchMessageModelSumologicTransformer implements
         LOG.warn("Exception during decompression of data: " + exc.getMessage());
         return null;
       }
+    }
+    
+    public static String byteBufferToString(ByteBuffer buffer){
+      String data = "";
+      CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder();
+      try{
+        int old_position = buffer.position();
+        data = decoder.decode(buffer).toString();
+        buffer.position(old_position);  
+      }catch (Exception e){
+        e.printStackTrace();
+        return "";
+      }
+      return data;
     }
 
 }
