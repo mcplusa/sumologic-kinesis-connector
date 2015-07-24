@@ -22,7 +22,7 @@ public class CloudWatchMessageModelSumologicTransformerTest {
   public static CharsetEncoder encoder = charset.newEncoder();
   
   @Test
-  public void theTransformerShouldFailGracefullyWhenUnableToTransform () {
+  public void theTransformerShouldFailGracefullyWhenUnableToCompress () {
     CloudWatchMessageModelSumologicTransformer transfomer = new CloudWatchMessageModelSumologicTransformer();
     
     String randomData = "Some random string without GZIP compression";
@@ -36,12 +36,8 @@ public class CloudWatchMessageModelSumologicTransformerTest {
     Record mockedRecord = new Record();
     mockedRecord.setData(bufferedData);
     
-    SimpleKinesisMessageModel messageModel = null;
-    try {
-      messageModel = transfomer.toClass(mockedRecord);
-    } catch (IOException e) {
-      Assert.fail("Getting error while transforming: "+e.getMessage());
-    }
+    CloudWatchLogsMessageModel messageModel = transfomer.toClass(mockedRecord);
+    
     
     Assert.assertNull(messageModel);
   }
@@ -50,15 +46,20 @@ public class CloudWatchMessageModelSumologicTransformerTest {
   public void theTransformerShouldSucceedWhenTransformingAProperJSON() {
     CloudWatchMessageModelSumologicTransformer transfomer = new CloudWatchMessageModelSumologicTransformer();
     
-    String jsonData =  "["
+    String jsonData =  ""
                           +"{"
-                          + "\"id\": \"55b25585730b5e5bcd53c580\","
-                          + "\"index\": 0,"
-                          + "\"guid\": \"f3bf1c45-306d-4799-801f-c6d16acca931\","
-                          + "\"isActive\": false,"
-                          + "\"picture\": \"http://placehold.it/32x32\""
+                          + "\"logEvents\": [{"
+                          +                   "\"id\": \"3889492387492837492374982374897239847289374892\","
+                          +                   "\"message\": \"1 23423532532 eni-ac9342k3492 10.1.1.75 66.175.209.17 123 123 17 1 76 1437755534 1437755549 ACCEPT OK\","
+                          +                   "\"timestamp\": \"2342342342300\""
+                          +                "}],"
+                          + "\"logGroup\": \"MyFirstVPC\","
+                          + "\"logStream\": \"eni-ac6a7de4-all\","
+                          + "\"messageType\": \"DATA_MESSAGE\","
+                          + "\"owner\": \"2342352352\","
+                          + "\"subscriptionFilters\": [\"MyFirstVPC\"]" 
                           + "}"
-                        +"]";
+                        +"";
     
     byte[] compressData = SumologicSender.compressGzip(jsonData);
     
@@ -72,31 +73,30 @@ public class CloudWatchMessageModelSumologicTransformerTest {
     Record mockedRecord = new Record();
     mockedRecord.setData(bufferedData);
     
-    SimpleKinesisMessageModel messageModel = null;
-    try {
-      messageModel = transfomer.toClass(mockedRecord);
-    } catch (IOException e) {
-      Assert.fail("Getting error while transforming: "+e.getMessage());
-    }
+    CloudWatchLogsMessageModel messageModel = transfomer.toClass(mockedRecord);
     
     Assert.assertNotNull(messageModel);
-    Assert.assertTrue(messageModel.getData().equals(jsonData));
   }
   
   @Test
-  public void theTransformerShouldSucceedWhenTransformingAJSONWithTrailingCommas() {
+  public void theTransformerShouldFailWhenTransformingAJSONWithTrailingCommas() {
     CloudWatchMessageModelSumologicTransformer transfomer = new CloudWatchMessageModelSumologicTransformer();
     
-    String jsonData =  "["
-                          +"{"
-                          + "\"id\": \"55b25585730b5e5bcd53c580\","
-                          + "\"index\": 0,"
-                          + "\"guid\": \"f3bf1c45-306d-4799-801f-c6d16acca931\","
-                          + "\"isActive\": false,"
-                          + "\"picture\": \"http://placehold.it/32x32\","
-                          + "}"
-                        +"]";
-    
+    String jsonData =  ""
+                        +"{"
+                        + "\"logEvents\": [{"
+                        +                   "\"id\": \"3889492387492837492374982374897239847289374892\","
+                        +                   "\"message\": \"1 23423532532 eni-ac9342k3492 10.1.1.75 66.175.209.17 123 123 17 1 76 1437755534 1437755549 ACCEPT OK\","
+                        +                   "\"timestamp\": \"2342342342300\""
+                        +                "}],"
+                        + "\"logGroup\": \"MyFirstVPC\","
+                        + "\"logStream\": \"eni-ac6a7de4-all\","
+                        + "\"messageType\": \"DATA_MESSAGE\","
+                        + "\"owner\": \"2342352352\","
+                        + "\"subscriptionFilters\": [\"MyFirstVPC\"]," 
+                        + "}"
+                      +"";
+                    
     byte[] compressData = SumologicSender.compressGzip(jsonData);
     
     ByteBuffer bufferedData = null;
@@ -109,13 +109,55 @@ public class CloudWatchMessageModelSumologicTransformerTest {
     Record mockedRecord = new Record();
     mockedRecord.setData(bufferedData);
     
-    SimpleKinesisMessageModel messageModel = null;
-    try {
-      messageModel = transfomer.toClass(mockedRecord);
-    } catch (IOException e) {
-      Assert.fail("Getting error while transforming: "+e.getMessage());
-    }
+    CloudWatchLogsMessageModel messageModel = null;
+    messageModel = transfomer.toClass(mockedRecord);
     
     Assert.assertNull(messageModel);
+  }
+  
+  @Test
+  public void theTransfomerShouldSeparateBatchesOfLogs() {
+    CloudWatchMessageModelSumologicTransformer transfomer = new CloudWatchMessageModelSumologicTransformer();
+    
+    String jsonData =  ""
+                        +"{"
+                        + "\"logEvents\": [{"
+                        +                   "\"id\": \"3889492387492837492374982374897239847289374892\","
+                        +                   "\"message\": \"1 23423532532 eni-ac9342k3492 10.1.1.75 66.175.209.17 123 123 17 1 76 1437755534 1437755549 ACCEPT OK\","
+                        +                   "\"timestamp\": \"2342342342300\""
+                        +                "},"
+                        +                "{"
+                        +                   "\"id\": \"3289429357928375892739857238975235235235\","
+                        +                   "\"message\": \"1 23423516 eni-ac9342k3492 10.1.1.75 66.175.209.17 123 123 17 1 76 1437755534 1437755549 REJECT OK\","
+                        +                   "\"timestamp\": \"2342352351616\""
+                        +                "}],"
+                        + "\"logGroup\": \"MyFirstVPC\","
+                        + "\"logStream\": \"eni-ac6a7de4-all\","
+                        + "\"messageType\": \"DATA_MESSAGE\","
+                        + "\"owner\": \"2342352352\","
+                        + "\"subscriptionFilters\": [\"MyFirstVPC\"]" 
+                        + "}"
+                      +"";
+                    
+    byte[] compressData = SumologicSender.compressGzip(jsonData);
+    
+    ByteBuffer bufferedData = null;
+    try {
+      bufferedData = ByteBuffer.wrap(compressData);
+    } catch (Exception e) {
+      Assert.fail("Getting error: "+e.getMessage());
+    }
+    
+    Record mockedRecord = new Record();
+    mockedRecord.setData(bufferedData);
+    
+    CloudWatchLogsMessageModel messageModel = null;
+    messageModel = transfomer.toClass(mockedRecord);
+    
+    String debatchedMessage = transfomer.fromClass(messageModel);
+    System.out.println(debatchedMessage);
+    
+    String[] messages = debatchedMessage.split("\n");
+    Assert.assertTrue(messages.length == 2);
   }
 }
