@@ -1,12 +1,12 @@
-package com.mcplusa.sumologic;
+package com.sumologic.client;
 
 import java.io.IOException;
 
 import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
 import com.amazonaws.services.kinesis.model.Record;
-import com.mcplusa.sumologic.SimpleKinesisMessageModel;
-import com.mcplusa.sumologic.implementations.SumologicEmitter;
-import com.mcplusa.sumologic.implementations.SumologicTransformer;
+import com.sumologic.client.SimpleKinesisMessageModel;
+import com.sumologic.client.implementations.SumologicEmitter;
+import com.sumologic.client.implementations.SumologicTransformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

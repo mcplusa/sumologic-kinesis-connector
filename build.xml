@@ -77,13 +77,13 @@
         <javac srcdir="${src.dir}/main/java" 
                        destdir="${basedir}/build" 
                        classpathref="sumologic.classpath"
-                       includes="com/mcplusa/kinesis/*.java, com/mcplusa/kinesis/utils/*.java,
-                                 com/mcplusa/sumologic/*.java, com/mcplusa/sumologic/implementations/*.java"/>
+                       includes="com/sumologic/kinesis/*.java, com/sumologic/kinesis/utils/*.java,
+                                 com/sumologic/client/*.java, com/sumologic/client/implementations/*.java"/>
         <javac srcdir="${src.dir}/test/java" 
                destdir="${basedir}/build" 
                classpathref="sumologic.classpath"
-               includes="com/mcplusa/kinesis/*.java, com/mcplusa/kinesis/utils/*.java,
-                         com/mcplusa/sumologic/*.java, com/mcplusa/sumologic/implementations/*.java"/>
+               includes="com/sumologic/kinesis/*.java, com/sumologic/kinesis/utils/*.java,
+                         com/sumologic/client/*.java, com/sumologic/client/implementations/*.java"/>
 
 		<junit haltonfailure="yes" 
 			   showoutput="yes" 
@@ -106,11 +106,12 @@
     <target name="main">
         <mkdir dir="${basedir}/build"/>
         <javac srcdir="${src.dir}/main/java" 
+        	   debug="on"
                destdir="${basedir}/build" 
                classpathref="sumologic.classpath"
-               includes="com/mcplusa/kinesis/*.java, com/mcplusa/kinesis/utils/*.java,
-                         com/mcplusa/sumologic/*.java, com/mcplusa/sumologic/implementations/*.java"/>
-        <java classname="com.mcplusa.sumologic.SumologicExecutor" classpathref="sumologic.classpath" fork="true" />
+               includes="com/sumologic/kinesis/*.java, com/sumologic/kinesis/utils/*.java,
+                         com/sumologic/client/*.java, com/sumologic/client/implementations/*.java"/>
+        <java classname="com.sumologic.client.SumologicExecutor" classpathref="sumologic.classpath" fork="true" />
 	</target>
 
     <target name="run">

@@ -1,10 +1,10 @@
-package com.mcplusa.sumologic;
+package com.sumologic.client;
 
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorRecordProcessorFactory;
 
-import com.mcplusa.kinesis.KinesisConnectorExecutor;
-import com.mcplusa.sumologic.SimpleKinesisMessageModel;
-import com.mcplusa.sumologic.SumologicMessageModelPipeline;
+import com.sumologic.kinesis.KinesisConnectorExecutor;
+import com.sumologic.client.SimpleKinesisMessageModel;
+import com.sumologic.client.SumologicMessageModelPipeline;
 
 public class SumologicExecutor extends KinesisConnectorExecutor<SimpleKinesisMessageModel, String> {
 

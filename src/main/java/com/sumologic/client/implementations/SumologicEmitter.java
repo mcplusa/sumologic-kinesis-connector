@@ -1,4 +1,4 @@
-package com.mcplusa.sumologic.implementations;
+package com.sumologic.client.implementations;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mcplusa.sumologic.SumologicSender;
-import com.mcplusa.sumologic.KinesisConnectorForSumologicConfiguration;
+import com.sumologic.client.SumologicSender;
+import com.sumologic.client.KinesisConnectorForSumologicConfiguration;
 
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.connectors.UnmodifiableBuffer;
