@@ -1,4 +1,4 @@
-package com.mcplusa.sumologic;
+package com.sumologic.client;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.junit.Ignore;
 
 import com.amazonaws.services.kinesis.model.Record;
-import com.mcplusa.sumologic.CloudWatchMessageModelSumologicTransformer;
-import com.mcplusa.sumologic.SimpleKinesisMessageModel;
+import com.sumologic.client.CloudWatchMessageModelSumologicTransformer;
+import com.sumologic.client.SimpleKinesisMessageModel;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

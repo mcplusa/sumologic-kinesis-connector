@@ -1,4 +1,4 @@
-package com.mcplusa.kinesis;
+package com.sumologic.kinesis;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +7,8 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mcplusa.sumologic.KinesisConnectorForSumologicConfiguration;
-import com.mcplusa.kinesis.KinesisConnectorExecutorBase;
+import com.sumologic.client.KinesisConnectorForSumologicConfiguration;
+import com.sumologic.kinesis.KinesisConnectorExecutorBase;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;

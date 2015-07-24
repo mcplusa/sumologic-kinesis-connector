@@ -1,4 +1,4 @@
-package com.mcplusa.sumologic;
+package com.sumologic.client;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -16,9 +16,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.mcplusa.sumologic.CloudWatchMessageModelSumologicTransformer;
-import com.mcplusa.sumologic.SumologicSender;
-import com.mcplusa.sumologic.implementations.SumologicEmitter;
+import com.sumologic.client.CloudWatchMessageModelSumologicTransformer;
+import com.sumologic.client.SumologicSender;
+import com.sumologic.client.implementations.SumologicEmitter;
 
 public class SumologicSenderTest {
   

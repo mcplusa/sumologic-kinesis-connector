@@ -1,4 +1,4 @@
-package com.mcplusa.kinesis.utils;
+package com.sumologic.kinesis.utils;
 
 import java.util.List;
 

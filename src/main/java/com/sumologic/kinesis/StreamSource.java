@@ -1,4 +1,4 @@
-package com.mcplusa.kinesis;
+package com.sumologic.kinesis;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +9,8 @@ import java.nio.ByteBuffer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mcplusa.sumologic.SimpleKinesisMessageModel;
-import com.mcplusa.kinesis.utils.KinesisUtils;
+import com.sumologic.client.SimpleKinesisMessageModel;
+import com.sumologic.kinesis.utils.KinesisUtils;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.regions.RegionUtils;

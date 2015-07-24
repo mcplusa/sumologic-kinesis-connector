@@ -1,4 +1,4 @@
-package com.mcplusa.kinesis;
+package com.sumologic.kinesis;
 
 import com.amazonaws.services.kinesis.metrics.impl.CWMetricsFactory;
 import com.amazonaws.services.kinesis.metrics.interfaces.IMetricsFactory;

@@ -1,4 +1,4 @@
-package com.mcplusa.kinesis;
+package com.sumologic.kinesis;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

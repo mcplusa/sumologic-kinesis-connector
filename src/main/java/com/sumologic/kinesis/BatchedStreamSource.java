@@ -1,4 +1,4 @@
-package com.mcplusa.kinesis;
+package com.sumologic.kinesis;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -14,7 +14,7 @@ import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mcplusa.sumologic.SimpleKinesisMessageModel;
+import com.sumologic.client.SimpleKinesisMessageModel;
 
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
 import com.amazonaws.services.kinesis.model.PutRecordRequest;
