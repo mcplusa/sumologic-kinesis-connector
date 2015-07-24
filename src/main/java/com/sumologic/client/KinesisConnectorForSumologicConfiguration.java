@@ -1,4 +1,4 @@
-package com.mcplusa.sumologic;
+package com.sumologic.client;
 
 import java.util.Properties;
 

@@ -1,4 +1,4 @@
-package com.mcplusa.sumologic.implementations;
+package com.sumologic.client.implementations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.mcplusa.sumologic.implementations.SumologicEmitter;
+import com.sumologic.client.implementations.SumologicEmitter;
 
 public class SumologicEmitterTest {
   

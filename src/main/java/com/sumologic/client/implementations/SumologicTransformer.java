@@ -1,4 +1,4 @@
-package com.mcplusa.sumologic.implementations;
+package com.sumologic.client.implementations;
 
 import com.amazonaws.services.kinesis.connectors.interfaces.ITransformer;
 
