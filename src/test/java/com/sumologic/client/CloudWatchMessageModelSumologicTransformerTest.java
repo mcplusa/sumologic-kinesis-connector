@@ -21,7 +21,6 @@ public class CloudWatchMessageModelSumologicTransformerTest {
   public static Charset charset = Charset.forName("UTF-8");
   public static CharsetEncoder encoder = charset.newEncoder();
   
-  @Ignore
   @Test
   public void theTransformerShouldFailGracefullyWhenUnableToTransform () {
     CloudWatchMessageModelSumologicTransformer transfomer = new CloudWatchMessageModelSumologicTransformer();
