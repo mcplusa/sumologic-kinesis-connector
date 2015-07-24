@@ -47,7 +47,7 @@ public class SumologicMessageModelPipeline implements
       
       // Load specified class
       String argClass = ((KinesisConnectorForSumologicConfiguration)configuration).TRANSFORMER_CLASS;
-      String className = "com.mcplusa.sumologic."+argClass;
+      String className = "com.sumologic.client."+argClass;
       ClassLoader classLoader = SumologicMessageModelPipeline.class.getClassLoader();
       Class ModelClass = null;
       try {
