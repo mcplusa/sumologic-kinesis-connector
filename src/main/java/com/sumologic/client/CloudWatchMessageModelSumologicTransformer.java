@@ -17,6 +17,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.zip.GZIPInputStream;
 
+import com.google.gson.Gson;
+
 /**
  * A custom transfomer for {@link SimpleKinesisMessageModel} records in JSON format. The output is in a format
  * usable for insertions to Sumologic.
@@ -44,8 +46,14 @@ public class CloudWatchMessageModelSumologicTransformer implements
       String stringifiedRecord = decompressGzip(decodedRecord);
       
       if (stringifiedRecord == null) {
-        LOG.error("Unable to decompress the record: "+new String(record.getData().array()));
-        LOG.error("Not attempting to transform into a Message Model");
+        LOG.error("Unable to decompress the record: "+new String(record.getData().array())
+                 +"\nNot attempting to transform into a Message Model");
+        return null;
+      }
+      
+      if (!verifyJSON(stringifiedRecord)) {
+        LOG.error("The record is not a valid JSON: "+stringifiedRecord
+                 +"\nNot attempting to transform into a Message Model");
         return null;
       }
 
@@ -81,6 +89,16 @@ public class CloudWatchMessageModelSumologicTransformer implements
         return "";
       }
       return data;
+    }
+
+    private static final Gson gson = new Gson();
+    public static boolean verifyJSON(String json) {
+      try {
+          gson.fromJson(json, Object.class);
+          return true;
+      } catch(com.google.gson.JsonSyntaxException ex) { 
+          return false;
+      }
     }
 
 }

@@ -48,7 +48,7 @@ public class SumologicSender {
 	    BoundRequestBuilder builder = null;
 	    builder = this.clientPreparePost(url);
 	    
-	    byte[] compressedData = compressGzip(data);
+	    byte[] compressedData = SumologicSender.compressGzip(data);
 	    
 	    builder.setHeader("Content-Encoding", "gzip");
 	    builder.setBody(compressedData);
@@ -82,7 +82,7 @@ public class SumologicSender {
     } 
 	}
 	
-	public byte[] compressGzip(String data) {
+	public static byte[] compressGzip(String data) {
 	  if (data == null || data.length() == 0) {
       return null;
 	  }

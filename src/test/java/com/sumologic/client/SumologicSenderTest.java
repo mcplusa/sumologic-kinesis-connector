@@ -74,9 +74,7 @@ public class SumologicSenderTest {
     
     String data = "a string of characters";
     
-    SumologicSender sender = new SumologicSender(url);
-
-    byte[] compressData = sender.compressGzip(data);
+    byte[] compressData = SumologicSender.compressGzip(data);
     String result = CloudWatchMessageModelSumologicTransformer.decompressGzip(compressData);
     
     Assert.assertTrue(data.equals(result));
