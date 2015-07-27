@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.KinesisClientLibDependencyException;
@@ -71,8 +70,8 @@ public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
     private final long backoffInterval;
     private boolean isShutdown = false;
 
-    private static final Log LOG = LogFactory.getLog(KinesisConnectorRecordProcessor.class);
-
+    private static final Logger LOG = Logger.getLogger(KinesisConnectorRecordProcessor.class.getName());
+    
     private String shardId;
 
     public KinesisConnectorRecordProcessor(IBuffer<T> buffer,

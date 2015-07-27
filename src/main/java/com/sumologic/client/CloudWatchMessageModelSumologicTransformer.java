@@ -2,7 +2,6 @@ package com.sumologic.client;
 
 import java.io.IOException;
 
-import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
 import com.amazonaws.services.kinesis.model.Record;
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
@@ -11,24 +10,16 @@ import com.sumologic.client.implementations.SumologicTransformer;
 import com.sumologic.client.model.CloudWatchLogsMessageModel;
 import com.sumologic.client.model.LogEvent;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
-import java.io.ByteArrayInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 /**
  * A custom transfomer for {@link CloudWatchLogsMessageModel} records in JSON format. The output is in a format
@@ -36,9 +27,8 @@ import com.google.gson.Gson;
  */
 public class CloudWatchMessageModelSumologicTransformer 
   implements SumologicTransformer<CloudWatchLogsMessageModel> {
-
-  private static final Log LOG = LogFactory.getLog(CloudWatchMessageModelSumologicTransformer.class);
-
+  private static final Logger LOG = Logger.getLogger(CloudWatchMessageModelSumologicTransformer.class.getName());
+  
   private static CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder();
   
     /**

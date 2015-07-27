@@ -1,10 +1,8 @@
 package com.sumologic.kinesis;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.sumologic.kinesis.KinesisConnectorRecordProcessorFactory;
-
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.connectors.KinesisConnectorConfiguration;
@@ -12,8 +10,8 @@ import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory;
 import com.amazonaws.services.kinesis.metrics.interfaces.IMetricsFactory;
 
 public abstract class KinesisConnectorExecutorBase<T, U> implements Runnable {
-    private static final Log LOG = LogFactory.getLog(KinesisConnectorExecutorBase.class);
-
+    private static final Logger LOG = Logger.getLogger(KinesisConnectorExecutorBase.class.getName());
+    
     // Amazon Kinesis Client Library worker to process records
     protected Worker worker;
 

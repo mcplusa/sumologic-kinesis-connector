@@ -6,8 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.sumologic.client.model.SimpleKinesisMessageModel;
 import com.sumologic.kinesis.utils.KinesisUtils;
@@ -24,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * stream defined in the KinesisConnectorConfiguration.
  */
 public class StreamSource implements Runnable {
-    private static Log LOG = LogFactory.getLog(StreamSource.class);
+    private static final Logger LOG = Logger.getLogger(StreamSource.class.getName());
     protected AmazonKinesisClient kinesisClient;
     protected KinesisConnectorConfiguration config;
     protected final String inputFile;

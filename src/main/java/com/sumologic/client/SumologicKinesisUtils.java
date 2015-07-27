@@ -11,14 +11,13 @@ import java.nio.charset.CharsetDecoder;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 
 public class SumologicKinesisUtils {
-  private static final Log LOG = LogFactory.getLog(SumologicKinesisUtils.class);
-  
+  private static final Logger LOG = Logger.getLogger(SumologicKinesisUtils.class.getName());
+
   public static byte[] compressGzip(String data) {
     if (data == null || data.length() == 0) {
       return null;
