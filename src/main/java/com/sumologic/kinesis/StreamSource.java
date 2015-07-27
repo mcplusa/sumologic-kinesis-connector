@@ -9,9 +9,8 @@ import java.nio.ByteBuffer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sumologic.client.SimpleKinesisMessageModel;
+import com.sumologic.client.model.SimpleKinesisMessageModel;
 import com.sumologic.kinesis.utils.KinesisUtils;
-
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
@@ -106,7 +105,8 @@ public class StreamSource implements Runnable {
             String line;
             int lines = 0;
             while ((line = br.readLine()) != null) {
-                SimpleKinesisMessageModel kinesisMessageModel = objectMapper.readValue(line, SimpleKinesisMessageModel.class);
+                SimpleKinesisMessageModel kinesisMessageModel = new SimpleKinesisMessageModel(line);
+                //SimpleKinesisMessageModel kinesisMessageModel = objectMapper.readValue(line, SimpleKinesisMessageModel.class);
 
                 PutRecordRequest putRecordRequest = new PutRecordRequest();
                 putRecordRequest.setStreamName(config.KINESIS_INPUT_STREAM);

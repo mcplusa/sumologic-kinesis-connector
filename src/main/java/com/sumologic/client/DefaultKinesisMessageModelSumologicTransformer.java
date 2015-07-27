@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import com.amazonaws.services.kinesis.connectors.BasicJsonTransformer;
 import com.amazonaws.services.kinesis.model.Record;
-import com.sumologic.client.SimpleKinesisMessageModel;
 import com.sumologic.client.implementations.SumologicEmitter;
 import com.sumologic.client.implementations.SumologicTransformer;
+import com.sumologic.client.model.SimpleKinesisMessageModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

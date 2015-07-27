@@ -7,8 +7,9 @@ import com.amazonaws.services.kinesis.model.Record;
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.amazonaws.util.json.JSONObject;
-import com.sumologic.client.SimpleKinesisMessageModel;
 import com.sumologic.client.implementations.SumologicTransformer;
+import com.sumologic.client.model.CloudWatchLogsMessageModel;
+import com.sumologic.client.model.LogEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,7 +85,7 @@ public class CloudWatchMessageModelSumologicTransformer
     @Override
     public CloudWatchLogsMessageModel toClass(Record record) {
       byte[] decodedRecord = record.getData().array();
-      String stringifiedRecord = decompressGzip(decodedRecord);
+      String stringifiedRecord = SumologicKinesisUtils.decompressGzip(decodedRecord);
       
       if (stringifiedRecord == null) {
         LOG.error("Unable to decompress the record: "+new String(record.getData().array())
@@ -109,48 +110,5 @@ public class CloudWatchMessageModelSumologicTransformer
                  +"\nerror: "+e.getMessage());
       } 
       return null;
-      
     }
-
-    public static String decompressGzip(byte[] compressedData) {
-      try {
-        GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(compressedData));
-        BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
-        
-        String outStr = "";
-        String line;
-        while ((line=bf.readLine())!=null) {
-          outStr += line;
-        }
-        return outStr;
-      } catch (IOException exc) {
-        LOG.warn("Exception during decompression of data: " + exc.getMessage());
-        return null;
-      }
-    }
-    
-    public static String byteBufferToString(ByteBuffer buffer){
-      String data = "";
-      CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder();
-      try{
-        int old_position = buffer.position();
-        data = decoder.decode(buffer).toString();
-        buffer.position(old_position);  
-      }catch (Exception e){
-        e.printStackTrace();
-        return "";
-      }
-      return data;
-    }
-
-    private static final Gson gson = new Gson();
-    public static boolean verifyJSON(String json) {
-      try {
-          gson.fromJson(json, Object.class);
-          return true;
-      } catch(com.google.gson.JsonSyntaxException ex) { 
-          return false;
-      }
-    }
-
 }
