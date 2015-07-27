@@ -1,4 +1,4 @@
-package com.sumologic.client;
+package com.sumologic.client.model;
 
 import java.io.Serializable;
 

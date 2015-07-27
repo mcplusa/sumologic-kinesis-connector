@@ -1,4 +1,4 @@
-package com.sumologic.client;
+package com.sumologic.client.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com.sumologic.client.LogEvent;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
