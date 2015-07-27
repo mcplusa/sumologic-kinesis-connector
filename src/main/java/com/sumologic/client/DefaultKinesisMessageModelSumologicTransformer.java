@@ -46,7 +46,7 @@ public class DefaultKinesisMessageModelSumologicTransformer implements
     public SimpleKinesisMessageModel toClass(Record record) throws IOException {
       byte[] decodedRecord = record.getData().array();
       String stringifiedRecord = new String(decodedRecord);
-
+      
       return new SimpleKinesisMessageModel(stringifiedRecord);
     }
 }

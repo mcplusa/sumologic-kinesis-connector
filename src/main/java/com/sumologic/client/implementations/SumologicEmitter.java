@@ -67,7 +67,9 @@ public class SumologicEmitter implements IEmitter<String> {
       if (success)
         return new ArrayList<String>();
       else {
-        return records;
+        ArrayList<String> failedRecords = new ArrayList<String>(records);
+        records = new ArrayList<String>();
+        return failedRecords;
       }
     }
     

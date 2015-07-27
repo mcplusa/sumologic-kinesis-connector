@@ -1,6 +1,6 @@
 package com.sumologic.client;
 
-import com.amazonaws.services.kinesis.connectors.KinesisConnectorRecordProcessorFactory;
+import com.sumologic.kinesis.KinesisConnectorRecordProcessorFactory;
 import com.sumologic.kinesis.KinesisConnectorExecutor;
 import com.sumologic.client.SumologicMessageModelPipeline;
 import com.sumologic.client.model.SimpleKinesisMessageModel;
